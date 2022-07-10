@@ -16,8 +16,37 @@ chrome.tabs.query({ active: true, currentWindow: true })
     // });
     wordleEntry2.onclick = () => {
       console.log('wordleEntry2 clicked');
-    }
-    
+
+      const enteredLines =
+      {
+        "enteredLines": [
+          {
+            "letters": "ARISE",
+            "evaluations": [
+              "present",
+              "absent",
+              "absent",
+              "present",
+              "present"
+            ]
+          },
+          {
+            "letters": "MOUND",
+            "evaluations": [
+              "absent",
+              "absent",
+              "absent",
+              "absent",
+              "correct"
+            ]
+          }
+        ]
+      };
+
+      processEnteredLinesMessage(enteredLines.enteredLines, jwordleCallback)
+    };
+
+
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
       function: executeContentScript,
@@ -35,13 +64,39 @@ chrome.tabs.query({ active: true, currentWindow: true })
                 }
         */
 
-        processEnteredLinesMessage(request.enteredLines);
+        processEnteredLinesMessage(request.enteredLines, twordleCallback);
       }
     );
 
   });
 
-function processEnteredLinesMessage(enteredLines) {
+
+function twordleCallback(candidateWords) {
+  console.log(candidateWords);
+  const candidateWordsList = document.getElementById('candidateWordsList');
+
+  // clear previous items
+  candidateWordsList.innerHTML = '';
+
+  for (var i = 0; i < candidateWords.length; i++) {
+
+    // Create the list item:
+    var item = document.createElement('li');
+
+    // Set its contents:
+    item.appendChild(document.createTextNode(candidateWords[i]));
+
+    // Add it to the list:
+    candidateWordsList.appendChild(item);
+  }
+}
+
+function jwordleCallback(candidateWords) {
+  console.log('jwordleCallback: candidate words were');
+  console.log(candidateWords);
+}
+
+function processEnteredLinesMessage(enteredLines, cb) {
 
   console.log('processEnteredLinesMessage');
   console.log(enteredLines);
@@ -61,24 +116,7 @@ function processEnteredLinesMessage(enteredLines) {
     .then(response => response.text())
     .then(response => {
       const candidateWords = JSON.parse(response).words;
-      console.log(candidateWords);
-      const candidateWordsList = document.getElementById('candidateWordsList');
-
-      // clear previous items
-      candidateWordsList.innerHTML = '';
-
-      for (var i = 0; i < candidateWords.length; i++) {
-
-        // Create the list item:
-        var item = document.createElement('li');
-
-        // Set its contents:
-        item.appendChild(document.createTextNode(candidateWords[i]));
-
-        // Add it to the list:
-        candidateWordsList.appendChild(item);
-
-      }
+      cb(candidateWords);
     })
 }
 
