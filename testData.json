@@ -1,0 +1,34 @@
+{
+  "enteredLines": [
+    {
+      "letters": "arise",
+      "evaluations": [
+        "absent",
+        "present",
+        "absent",
+        "present",
+        "present"
+      ]
+    },
+    {
+      "letters": "mound",
+      "evaluations": [
+        "absent",
+        "absent",
+        "absent",
+        "absent",
+        "absent"
+      ]
+    },
+    {
+      "letters": "screw",
+      "evaluations": [
+        "correct",
+        "absent",
+        "present",
+        "correct",
+        "absent"
+      ]
+    }
+  ]
+}
