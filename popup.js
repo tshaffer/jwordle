@@ -92,8 +92,19 @@ function twordleCallback(candidateWords) {
 }
 
 function jwordleCallback(candidateWords) {
+
   console.log('jwordleCallback: candidate words were');
   console.log(candidateWords);
+
+  let wordleEntry2 = document.getElementById("wordleEntry2");
+
+  wordleEntry2.classList.toggle("active");
+  var content = wordleEntry2.nextElementSibling;
+  if (content.style.maxHeight) {
+    content.style.maxHeight = null;
+  } else {
+    content.style.maxHeight = content.scrollHeight + "px";
+  }
 }
 
 function processEnteredLinesMessage(enteredLines, cb) {
