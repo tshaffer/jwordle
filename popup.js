@@ -96,6 +96,8 @@ function jwordleCallback(candidateWords) {
   console.log('jwordleCallback: candidate words were');
   console.log(candidateWords);
 
+  twordleCallback(candidateWords);
+  
   let wordleEntry2 = document.getElementById("wordleEntry2");
 
   wordleEntry2.classList.toggle("active");
