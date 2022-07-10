@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>JWordle</title>
-  <link rel="stylesheet" href="button.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -14,50 +14,42 @@
   <div style="width:340px;">
     <div style="font-size: 14px">
       <p>Wordle Entries</p>
-      <span style="color: white; background-color: #c9b458">
+      <span class="present">
         A
       </span>
-      <span style="color: white; background-color: #787c7e">
+      <span class="absent">
         R
       </span>
-      <span style="color: white; background-color: #787c7e">
+      <span class="absent">
         I
       </span>
-      <span style="color: white; background-color: #c9b458">
+      <span class="present">
         S
       </span>
-      <span style="color: white; background-color: #c9b458">
+      <span class="present">
         E
       </span>
       <br />
-      <button>
-        <span style="color: white; background-color: #787c7e">
+      <button id="wordleEntry2">
+        <span class="absent">
           M
         </span>
-        <span style="color: white; background-color: #787c7e">
+        <span class="absent">
           O
         </span>
-        <span style="color: white; background-color: #787c7e">
+        <span class="absent">
           U
         </span>
-        <span style="color: white; background-color: #787c7e">
+        <span class="absent">
           N
         </span>
-        <span style="color: white; background-color: #6aaa64">
+        <span class="correct">
           D
         </span>
       </button>
       <br />
     </div>
   </div>
-
-
-  <!-- <div style="position: absolute;">JWordle</div>
-  <br/>
-  Candidate words:
-  <ul id="candidateWordsList">
-  </ul>
- -->
   <script src="popup.js"></script>
 </body>
 

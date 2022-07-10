@@ -10,6 +10,14 @@ getTestData(runtimeTestDataUrl);
 chrome.tabs.query({ active: true, currentWindow: true })
   .then(([tab]) => {
 
+    let wordleEntry2 = document.getElementById("wordleEntry2");
+    // wordleEntry2.addEventListener("click", async () => {
+    //   console.log('wordleEntry2 clicked');
+    // });
+    wordleEntry2.onclick = () => {
+      console.log('wordleEntry2 clicked');
+    }
+    
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
       function: executeContentScript,
