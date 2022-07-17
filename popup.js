@@ -128,10 +128,10 @@ function processEnteredLinesMessage(enteredLines) {
     const divId = 'l' + lineIndex.toString();
     console.log(divId);
 
-    // const divIdElement = document.getElementById(divId);
+    const divIdElement = document.getElementById(divId);
 
     if (enteredLine.length > 0) {
-      // divIdElement.setAttribute("class", "blockDiv");
+      divIdElement.setAttribute("class", "blockDiv");
       const evaluations = enteredLines[lineIndex].evaluations; // array of 5 of absent, present, or correct
       for (let letterIndex = 0; letterIndex < 5; letterIndex++) {
 
@@ -153,7 +153,7 @@ function processEnteredLinesMessage(enteredLines) {
       }
     } else {
       console.log('entered line empty');
-      // divIdElement.setAttribute("class", "hiddenDiv");
+      divIdElement.setAttribute("class", "hiddenDiv");
     }
 
   }
