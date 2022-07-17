@@ -10,41 +10,41 @@ getTestData(runtimeTestDataUrl);
 chrome.tabs.query({ active: true, currentWindow: true })
   .then(([tab]) => {
 
-    let wordleEntry2 = document.getElementById("wordleEntry2");
-    // wordleEntry2.addEventListener("click", async () => {
+    // let wordleEntry2 = document.getElementById("wordleEntry2");
+    // // wordleEntry2.addEventListener("click", async () => {
+    // //   console.log('wordleEntry2 clicked');
+    // // });
+    // wordleEntry2.onclick = () => {
     //   console.log('wordleEntry2 clicked');
-    // });
-    wordleEntry2.onclick = () => {
-      console.log('wordleEntry2 clicked');
 
-      const enteredLines =
-      {
-        "enteredLines": [
-          {
-            "letters": "ARISE",
-            "evaluations": [
-              "present",
-              "absent",
-              "absent",
-              "present",
-              "present"
-            ]
-          },
-          {
-            "letters": "MOUND",
-            "evaluations": [
-              "absent",
-              "absent",
-              "absent",
-              "absent",
-              "correct"
-            ]
-          }
-        ]
-      };
+    //   const enteredLines =
+    //   {
+    //     "enteredLines": [
+    //       {
+    //         "letters": "ARISE",
+    //         "evaluations": [
+    //           "present",
+    //           "absent",
+    //           "absent",
+    //           "present",
+    //           "present"
+    //         ]
+    //       },
+    //       {
+    //         "letters": "MOUND",
+    //         "evaluations": [
+    //           "absent",
+    //           "absent",
+    //           "absent",
+    //           "absent",
+    //           "correct"
+    //         ]
+    //       }
+    //     ]
+    //   };
 
-      processEnteredLinesMessage(enteredLines.enteredLines, jwordleCallback)
-    };
+    //   processEnteredLinesMessage(enteredLines.enteredLines, jwordleCallback)
+    // };
 
 
     chrome.scripting.executeScript({
@@ -64,7 +64,7 @@ chrome.tabs.query({ active: true, currentWindow: true })
                 }
         */
 
-        processEnteredLinesMessage(request.enteredLines, twordleCallback);
+        processEnteredLinesMessage(request.enteredLines);
       }
     );
 
@@ -97,7 +97,7 @@ function jwordleCallback(candidateWords) {
   console.log(candidateWords);
 
   twordleCallback(candidateWords);
-  
+
   let wordleEntry2 = document.getElementById("wordleEntry2");
 
   wordleEntry2.classList.toggle("active");
@@ -109,7 +109,72 @@ function jwordleCallback(candidateWords) {
   }
 }
 
-function processEnteredLinesMessage(enteredLines, cb) {
+function processEnteredLinesMessage(enteredLines) {
+
+  console.log('processEnteredLinesMessage');
+  console.log(enteredLines);
+
+  const letterTypes = getLetterTypes(enteredLines);
+  console.log('letterTypes');
+  console.log(letterTypes);
+
+  for (let lineIndex = 0; lineIndex < enteredLines.length; lineIndex++) {
+
+    const enteredLine = enteredLines[lineIndex].letters;
+    console.log('enteredLine');
+    console.log(enteredLine);
+
+    console.log('divId');
+    const divId = 'l' + lineIndex.toString();
+    console.log(divId);
+
+    const divIdElement = document.getElementById(divId);
+
+    if (enteredLine.length > 0) {
+      divIdElement.setAttribute("class", "blockDiv");
+      const evaluations = enteredLines[lineIndex].evaluations; // array of 5 of absent, present, or correct
+      for (let letterIndex = 0; letterIndex < 5; letterIndex++) {
+
+        const spanId = divId + letterIndex.toString();
+        const spanElement = document.getElementById(spanId);
+        spanElement.innerHTML = enteredLines[lineIndex].letters[letterIndex];
+
+        const evaluation = evaluations[letterIndex];
+        if (evaluation === 'correct') {
+          console.log('correct');
+          spanElement.setAttribute("class", "correct");
+        } else if (evaluation === 'present') {
+          console.log('present');
+          spanElement.setAttribute("class", "present");
+        } else {
+          console.log('absent');
+          spanElement.setAttribute("class", "absent");
+        }
+      }
+    } else {
+      console.log('entered line empty');
+      divIdElement.setAttribute("class", "hiddenDiv");
+    }
+
+  }
+  /*
+interface EnteredLine {
+  letters: string;
+  evaluations: string[]; // where each string is 'present', 'absent', or '?'
+}
+interface EnteredLines: EnteredLine[]  // length of enteredLines is 6
+
+return
+  export interface LetterTypes {
+    lettersAtExactLocation: string[];
+    lettersNotAtExactLocation: string[];
+    lettersNotInWord: string;
+  }
+*/
+
+
+}
+function old_processEnteredLinesMessage(enteredLines, cb) {
 
   console.log('processEnteredLinesMessage');
   console.log(enteredLines);

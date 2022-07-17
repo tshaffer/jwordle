@@ -1,3 +1,11 @@
+.blockDiv {
+  display: block;
+}
+
+.hiddenDiv {
+  display: none;
+}
+
 button {
   height: 30px;
 }
@@ -13,8 +21,8 @@ button {
 }
 
 .absent {
-  color: white;
-  background-color: #787c7e;
+  /* color: white; */
+  /* background-color: #787c7e; */
 }
 
 .collapsible {
