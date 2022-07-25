@@ -71,6 +71,8 @@ chrome.tabs.query({ active: true, currentWindow: true })
           console.log('candidateWords');
           console.log(candidateWords);
           // cb(candidateWords);
+
+          twordleCallback(candidateWords);
         })
 
     }
