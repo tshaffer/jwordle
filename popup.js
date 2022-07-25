@@ -5,47 +5,53 @@ const testDataUrl = 'testData.json';
 const runtimeTestDataUrl = chrome.runtime.getURL(testDataUrl);
 
 getVersion(versionUrl);
-getTestData(runtimeTestDataUrl);
+// getTestData(runtimeTestDataUrl);
+
+function getGuessValue(id) {
+  const element = document.getElementById(id);
+
+  console.log('id: ' + id);
+  console.log('className: ' + element.className);
+  // present, absent, or correct
+  
+  return {
+    letter: element.innerHTML.trim(),
+    evaluation: element.className,
+  }
+}
+
+function getEnteredLine(lineId) {
+  const guessValue0 = getGuessValue(lineId + '0');
+  const guessValue1 = getGuessValue(lineId + '1');
+  const guessValue2 = getGuessValue(lineId + '2');
+  const guessValue3 = getGuessValue(lineId + '3');
+  const guessValue4 = getGuessValue(lineId + '4');
+  const letters = guessValue0.letter + guessValue1.letter + guessValue2.letter + guessValue3.letter + guessValue4.letter;
+  const evaluations = [guessValue0.evaluation, guessValue1.evaluation, guessValue2.evaluation, guessValue3.evaluation, guessValue4.evaluation];
+  return {
+    letters,
+    evaluations,
+  }
+}
 
 chrome.tabs.query({ active: true, currentWindow: true })
   .then(([tab]) => {
 
-    // let wordleEntry2 = document.getElementById("wordleEntry2");
-    // // wordleEntry2.addEventListener("click", async () => {
-    // //   console.log('wordleEntry2 clicked');
-    // // });
-    // wordleEntry2.onclick = () => {
-    //   console.log('wordleEntry2 clicked');
+    const line1Element = document.getElementById('l1');
+    line1Element.onclick = () => {
+      console.log('user clicked on the second line');
 
-    //   const enteredLines =
-    //   {
-    //     "enteredLines": [
-    //       {
-    //         "letters": "ARISE",
-    //         "evaluations": [
-    //           "present",
-    //           "absent",
-    //           "absent",
-    //           "present",
-    //           "present"
-    //         ]
-    //       },
-    //       {
-    //         "letters": "MOUND",
-    //         "evaluations": [
-    //           "absent",
-    //           "absent",
-    //           "absent",
-    //           "absent",
-    //           "correct"
-    //         ]
-    //       }
-    //     ]
-    //   };
+      // get the first string
+      const enteredLine0 = getEnteredLine('l0');
 
-    //   processEnteredLinesMessage(enteredLines.enteredLines, jwordleCallback)
-    // };
+      // get the second string
+      const enteredLine1 = getEnteredLine('l1');
 
+      // given these two guesses, and their colors, get candidate words from the server
+      console.log('guesses');
+      console.log(enteredLine0);
+      console.log(enteredLine1);
+    }
 
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
