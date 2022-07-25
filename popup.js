@@ -4,15 +4,28 @@ const getWordsUrl = serverUrl + '/api/v1/getWordsEndpoint';
 const testDataUrl = 'testData.json';
 const runtimeTestDataUrl = chrome.runtime.getURL(testDataUrl);
 
+/*
+  INTERFACES
+
+    export interface LetterTypes {
+      lettersAtExactLocation: string[];
+      lettersNotAtExactLocation: string[];
+      lettersNotInWord: string;
+    }
+
+    interface EnteredLine {
+      letters: string;
+      evaluations: string[]; // where each string is 'present', 'absent', or '?'
+    }
+
+    interface EnteredLines: EnteredLine[]
+*/
+
 getVersion(versionUrl);
 // getTestData(runtimeTestDataUrl);
 
 function getGuessValue(id) {
   const element = document.getElementById(id);
-
-  console.log('id: ' + id);
-  console.log('className: ' + element.className);
-  // present, absent, or correct
 
   return {
     letter: element.innerHTML.trim(),
@@ -86,7 +99,7 @@ chrome.tabs.query({ active: true, currentWindow: true })
 
     const line5Element = document.getElementById('l5');
     line5Element.onclick = () => {
-      lineElementClickCallback(['l1','l2', 'l3', 'l4', 'l5'], 'l5CandidateWordsList');
+      lineElementClickCallback(['l1', 'l2', 'l3', 'l4', 'l5'], 'l5CandidateWordsList');
     }
 
     chrome.scripting.executeScript({
@@ -96,16 +109,6 @@ chrome.tabs.query({ active: true, currentWindow: true })
 
     chrome.runtime.onMessage.addListener(
       function (request) {
-        console.log('extension onMessage.addListener invoked, received:');
-        console.log(request);
-        /*
-                export interface LetterTypes {
-                  lettersAtExactLocation: string[];
-                  lettersNotAtExactLocation: string[];
-                  lettersNotInWord: string;
-                }
-        */
-
         processEnteredLinesMessage(request.enteredLines);
       }
     );
@@ -199,47 +202,7 @@ function processEnteredLinesMessage(enteredLines) {
     }
 
   }
-  /*
-interface EnteredLine {
-  letters: string;
-  evaluations: string[]; // where each string is 'present', 'absent', or '?'
 }
-interface EnteredLines: EnteredLine[]  // length of enteredLines is 6
-
-return
-  export interface LetterTypes {
-    lettersAtExactLocation: string[];
-    lettersNotAtExactLocation: string[];
-    lettersNotInWord: string;
-  }
-*/
-
-
-}
-function old_processEnteredLinesMessage(enteredLines, cb) {
-
-  console.log('processEnteredLinesMessage');
-  console.log(enteredLines);
-
-  const letterTypes = getLetterTypes(enteredLines);
-  console.log('letterTypes');
-  console.log(letterTypes);
-
-  fetch(getWordsUrl, {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
-      'Content-type': 'application/json; charset=UTF-8'
-    },
-    body: JSON.stringify(letterTypes),
-  })
-    .then(response => response.text())
-    .then(response => {
-      const candidateWords = JSON.parse(response).words;
-      cb(candidateWords);
-    })
-}
-
 
 function getVersion(versionUrl) {
   fetch(versionUrl)
@@ -272,20 +235,6 @@ function getTestData(testDataUrl) {
     });
 }
 
-/*
-interface EnteredLine {
-  letters: string;
-  evaluations: string[]; // where each string is 'present', 'absent', or '?'
-}
-interface EnteredLines: EnteredLine[]  // length of enteredLines is 6
-
-return
-  export interface LetterTypes {
-    lettersAtExactLocation: string[];
-    lettersNotAtExactLocation: string[];
-    lettersNotInWord: string;
-  }
-*/
 function getLetterTypes(enteredLines) {
 
   let lettersNotInWord = '';
@@ -356,23 +305,13 @@ function executeContentScript() {
 
     const enteredLines = [];
 
-    // console.log('get body');
-    // const body = document.querySelectorAll('body');
-    // console.log(body);
-
-    // const wordleAppGame = document.querySelectorAll('div#wordle-app-game');
-
 
 
     console.log('attempt to find gameRows');
     // updated implementation - 6/24/2022
     const gameRows = document.querySelectorAll('.Row-module_row__dEHfN');
-    //     const gameRow = document.querySelectorAll('.Row-module_row__dEHfN')[0].querySelectorAll(".Tile-module_tile__3ayIZ")
-    //     gameRow[0].getAttribute("data-state") // 'absent', 'correct', 'present'
-    //     gameRow[0].innerHtml
     console.log('rows length: ' + gameRows.length);
     gameRows.forEach((gameRow, rowIndex) => {
-      // const gameRow = document.querySelectorAll('.Row-module_row__dEHfN')[rowIndex].querySelectorAll(".Tile-module_tile__3ayIZ")
       let letters = '';
       const evaluations = [];
       gameRow.childNodes.forEach((gameRowChildNode, letterIndex) => {
@@ -381,7 +320,6 @@ function executeContentScript() {
         const evaluation = realGameRow.getAttribute('data-state');
         letters += letterText;
         evaluations.push(evaluation);
-        // console.log('rowIndex: ', rowIndex, ' letterIndex: ', letterIndex, ' evaluation: ', evaluation, ' letterText: ', letterText);
       });
       console.log('rowIndex: ', rowIndex, 'Guess: ', letters, 'Evaluations: ', evaluations);
       const enteredLine = {
@@ -390,33 +328,6 @@ function executeContentScript() {
       };
       enteredLines.push(enteredLine);
     });
-
-
-
-
-
-    // original implementation
-    // const gameRows = document.querySelectorAll('game-app')[0].shadowRoot.querySelectorAll('#game')[0].querySelectorAll('game-row');
-    // console.log('rows length: ' + gameRows.length);
-    // gameRows.forEach((gameRow, rowIndex) => {
-
-    //   const letters = gameRow.getAttribute('letters');
-
-    //   const enteredLine = {
-    //     letters,
-    //     evaluations: []
-    //   };
-
-    //   const gameTiles = gameRow.shadowRoot.querySelectorAll('game-tile');
-
-    //   gameTiles.forEach((gameTile) => {
-    //     const evaluation = gameTile.getAttribute('evaluation')
-    //     enteredLine.evaluations.push(evaluation);
-    //   });
-
-    //   enteredLines.push(enteredLine);
-
-    // });
 
     console.log('Entered lines');
     console.log(enteredLines);
