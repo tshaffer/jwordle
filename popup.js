@@ -70,9 +70,7 @@ chrome.tabs.query({ active: true, currentWindow: true })
           const candidateWords = JSON.parse(response).words;
           console.log('candidateWords');
           console.log(candidateWords);
-          // cb(candidateWords);
-
-          twordleCallback(candidateWords);
+          twordleCallback(candidateWords, 'l1CandidateWordsList');
         })
 
     }
@@ -101,9 +99,9 @@ chrome.tabs.query({ active: true, currentWindow: true })
   });
 
 
-function twordleCallback(candidateWords) {
+function twordleCallback(candidateWords, candidateWordsListId) {
   console.log(candidateWords);
-  const candidateWordsList = document.getElementById('candidateWordsList');
+  const candidateWordsList = document.getElementById(candidateWordsListId);
 
   // clear previous items
   candidateWordsList.innerHTML = '';
