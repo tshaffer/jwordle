@@ -69,6 +69,26 @@ chrome.tabs.query({ active: true, currentWindow: true })
       lineElementClickCallback(['l1'], 'l1CandidateWordsList');
     }
 
+    const line2Element = document.getElementById('l2');
+    line2Element.onclick = () => {
+      lineElementClickCallback(['l1', 'l2'], 'l2CandidateWordsList');
+    }
+
+    const line3Element = document.getElementById('l3');
+    line3Element.onclick = () => {
+      lineElementClickCallback(['l1', 'l2', 'l3'], 'l3CandidateWordsList');
+    }
+
+    const line4Element = document.getElementById('l4');
+    line4Element.onclick = () => {
+      lineElementClickCallback(['l1', 'l2', 'l3', 'l4'], 'l4CandidateWordsList');
+    }
+
+    const line5Element = document.getElementById('l5');
+    line5Element.onclick = () => {
+      lineElementClickCallback(['l1','l2', 'l3', 'l4', 'l5'], 'l5CandidateWordsList');
+    }
+
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
       function: executeContentScript,
