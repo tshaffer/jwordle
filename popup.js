@@ -13,7 +13,7 @@ function getGuessValue(id) {
   console.log('id: ' + id);
   console.log('className: ' + element.className);
   // present, absent, or correct
-  
+
   return {
     letter: element.innerHTML.trim(),
     evaluation: element.className,
@@ -51,6 +51,28 @@ chrome.tabs.query({ active: true, currentWindow: true })
       console.log('guesses');
       console.log(enteredLine0);
       console.log(enteredLine1);
+
+      const enteredLines = [enteredLine0, enteredLine1];
+      const letterTypes = getLetterTypes(enteredLines);
+      console.log('letterTypes');
+      console.log(letterTypes);
+
+      fetch(getWordsUrl, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+          'Content-type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify(letterTypes),
+      })
+        .then(response => response.text())
+        .then(response => {
+          const candidateWords = JSON.parse(response).words;
+          console.log('candidateWords');
+          console.log(candidateWords);
+          // cb(candidateWords);
+        })
+
     }
 
     chrome.scripting.executeScript({
