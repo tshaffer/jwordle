@@ -34,45 +34,39 @@ function getEnteredLine(lineId) {
   }
 }
 
+function lineElementClickCallback(enteredLineIds, candidateWordsListId) {
+
+  // get the first string
+  const enteredLines = [getEnteredLine('l0')];
+
+  // get subsequent strings
+  enteredLineIds.forEach((enteredLineId) => {
+    enteredLines.push(getEnteredLine(enteredLineId));
+  });
+
+  const letterTypes = getLetterTypes(enteredLines);
+
+  fetch(getWordsUrl, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
+      'Content-type': 'application/json; charset=UTF-8'
+    },
+    body: JSON.stringify(letterTypes),
+  })
+    .then(response => response.text())
+    .then(response => {
+      const candidateWords = JSON.parse(response).words;
+      twordleCallback(candidateWords, candidateWordsListId);
+    })
+
+}
 chrome.tabs.query({ active: true, currentWindow: true })
   .then(([tab]) => {
 
     const line1Element = document.getElementById('l1');
     line1Element.onclick = () => {
-      console.log('user clicked on the second line');
-
-      // get the first string
-      const enteredLine0 = getEnteredLine('l0');
-
-      // get the second string
-      const enteredLine1 = getEnteredLine('l1');
-
-      // given these two guesses, and their colors, get candidate words from the server
-      console.log('guesses');
-      console.log(enteredLine0);
-      console.log(enteredLine1);
-
-      const enteredLines = [enteredLine0, enteredLine1];
-      const letterTypes = getLetterTypes(enteredLines);
-      console.log('letterTypes');
-      console.log(letterTypes);
-
-      fetch(getWordsUrl, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
-          'Content-type': 'application/json; charset=UTF-8'
-        },
-        body: JSON.stringify(letterTypes),
-      })
-        .then(response => response.text())
-        .then(response => {
-          const candidateWords = JSON.parse(response).words;
-          console.log('candidateWords');
-          console.log(candidateWords);
-          twordleCallback(candidateWords, 'l1CandidateWordsList');
-        })
-
+      lineElementClickCallback(['l1'], 'l1CandidateWordsList');
     }
 
     chrome.scripting.executeScript({
